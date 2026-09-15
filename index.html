@@ -550,6 +550,14 @@
   const indDeg = document.getElementById('ind-deg');
   const indRad = document.getElementById('ind-rad');
 
+  // Sorted by length descending to prevent partial match overlaps
+  const MULTI_TOKENS = [
+    'asin(', 'acos(', 'atan(', 'sinh(',
+    '10^(', 'abs(', 'RCL ', 'ENG ', '×10^', 'log(',
+    'sin(', 'cos(', 'tan(', 'Ans', '³√(', '^-1', 'e^(',
+    'ln(', '√(', '^2', '∫(', 'M+', 'M-'
+  ];
+
   function updateDisplay() {
     const left = expression.slice(0, cursorPos);
     const right = expression.slice(cursorPos);
@@ -660,16 +668,10 @@
         break;
       case 'del':
         if (cursorPos > 0) {
-          // Array of functions/tokens to delete as a single block
-          const tokens = [
-            'sin(', 'cos(', 'tan(', 'asin(', 'acos(', 'atan(', 
-            'log(', 'ln(', '√(', '³√(', 'Ans', '×10^', 'abs(', '^-1', '^2'
-          ];
-          
           let deletedToken = false;
           let leftStr = expression.slice(0, cursorPos);
           
-          for (let token of tokens) {
+          for (let token of MULTI_TOKENS) {
             if (leftStr.endsWith(token)) {
               expression = leftStr.slice(0, -token.length) + expression.slice(cursorPos);
               cursorPos -= token.length;
@@ -688,11 +690,7 @@
       case 'left':
         if (cursorPos > 0) {
            let foundToken = false;
-           const jumpTokens = [
-            'sin(', 'cos(', 'tan(', 'asin(', 'acos(', 'atan(', 
-            'log(', 'ln(', '√(', '³√(', 'Ans', '×10^', 'abs(', '^-1', '^2'
-           ];
-           for (let token of jumpTokens) {
+           for (let token of MULTI_TOKENS) {
               if (expression.slice(0, cursorPos).endsWith(token)) {
                  cursorPos -= token.length;
                  foundToken = true;
@@ -705,11 +703,7 @@
       case 'right':
         if (cursorPos < expression.length) {
            let foundToken = false;
-           const jumpTokens = [
-            'sin(', 'cos(', 'tan(', 'asin(', 'acos(', 'atan(', 
-            'log(', 'ln(', '√(', '³√(', 'Ans', '×10^', 'abs(', '^-1', '^2'
-           ];
-           for (let token of jumpTokens) {
+           for (let token of MULTI_TOKENS) {
               if (expression.slice(cursorPos).startsWith(token)) {
                  cursorPos += token.length;
                  foundToken = true;
