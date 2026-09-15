@@ -458,7 +458,7 @@
       <!-- Row 2 -->
       <div class="key-group">
         <div class="labels"><span class="lbl-yellow">SOLVE</span><span class="lbl-magenta">=</span></div>
-        <button class="btn-sci" data-val="calc">CALC</button>
+        <button class="btn-sci" data-val="calc" data-alpha="=">CALC</button>
       </div>
       <div class="key-group">
         <div class="labels"><span class="lbl-yellow">d/dx</span><span class="lbl-magenta">:</span></div>
@@ -469,7 +469,7 @@
       
       <div class="key-group" style="grid-column: 4;">
         <div class="labels"><span class="lbl-yellow">x!</span></div>
-        <button class="btn-sci" data-val="inv">x⁻¹</button>
+        <button class="btn-sci" data-val="inv" data-shift="fact">x⁻¹</button>
       </div>
       <div class="key-group">
         <div class="labels"><span class="lbl-yellow">Σ</span></div>
@@ -490,18 +490,18 @@
       <!-- Row 2 -->
       <div class="key-group"><div class="labels"><span class="lbl-yellow">∠</span><span class="lbl-magenta">A</span></div><button class="btn-sci" data-val="-" data-alpha="A">(-)</button></div>
       <div class="key-group"><div class="labels"><span class="lbl-yellow">←</span><span class="lbl-magenta">B</span></div><button class="btn-sci" data-val="deg" data-alpha="B">°' "</button></div>
-      <div class="key-group"><div class="labels"><span class="lbl-yellow">Abs</span><span class="lbl-magenta">C</span></div><button class="btn-sci" data-val="hyp" data-alpha="C">hyp</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">Abs</span><span class="lbl-magenta">C</span></div><button class="btn-sci" data-val="hyp" data-shift="abs" data-alpha="C">hyp</button></div>
       <div class="key-group"><div class="labels"><span class="lbl-yellow">sin⁻¹</span><span class="lbl-magenta">D</span></div><button class="btn-sci" data-val="sin" data-shift="asin" data-alpha="D">sin</button></div>
       <div class="key-group"><div class="labels"><span class="lbl-yellow">cos⁻¹</span><span class="lbl-magenta">E</span></div><button class="btn-sci" data-val="cos" data-shift="acos" data-alpha="E">cos</button></div>
       <div class="key-group"><div class="labels"><span class="lbl-yellow">tan⁻¹</span><span class="lbl-magenta">F</span></div><button class="btn-sci" data-val="tan" data-shift="atan" data-alpha="F">tan</button></div>
       
       <!-- Row 3 -->
-      <div class="key-group"><div class="labels"><span class="lbl-yellow">STO</span></div><button class="btn-sci" data-val="rcl" data-alpha="X">RCL</button></div>
-      <div class="key-group"><div class="labels"><span class="lbl-yellow">←</span></div><button class="btn-sci" data-val="eng" data-alpha="Y">ENG</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">STO</span></div><button class="btn-sci" data-val="rcl">RCL</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">←</span></div><button class="btn-sci" data-val="eng">ENG</button></div>
       <div class="key-group"><div class="labels"><span class="lbl-yellow">%</span></div><button class="btn-sci" data-val="(" data-shift="%">(</button></div>
-      <div class="key-group"><div class="labels"><span class="lbl-yellow">,</span><span class="lbl-magenta">X</span></div><button class="btn-sci" data-val=")">)</button></div>
-      <div class="key-group"><div class="labels"><span></span><span class="lbl-magenta">Y</span></div><button class="btn-sci" data-val="sd">S⇔D</button></div>
-      <div class="key-group"><div class="labels"><span class="lbl-yellow">M-</span><span class="lbl-magenta">M</span></div><button class="btn-sci" data-val="mplus">M+</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">,</span><span class="lbl-magenta">X</span></div><button class="btn-sci" data-val=")" data-shift="," data-alpha="X">)</button></div>
+      <div class="key-group"><div class="labels"><span></span><span class="lbl-magenta">Y</span></div><button class="btn-sci" data-val="sd" data-alpha="Y">S⇔D</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">M-</span><span class="lbl-magenta">M</span></div><button class="btn-sci" data-val="mplus" data-shift="mminus" data-alpha="M">M+</button></div>
     </div>
 
     <!-- Numpad Grid -->
@@ -526,7 +526,7 @@
       
       <div class="key-group"><div class="labels"><span class="lbl-yellow">Rnd</span></div><button class="btn-num" data-val="0">0</button></div>
       <div class="key-group"><div class="labels"><span class="lbl-yellow">Ran#</span><span class="lbl-magenta">RanInt</span></div><button class="btn-num" data-val=".">.</button></div>
-      <div class="key-group"><div class="labels"><span class="lbl-yellow">π</span><span class="lbl-magenta">e</span></div><button class="btn-num" style="font-size: clamp(14px, 4vw, 18px);" data-val="×10^" data-shift="π" data-alpha="e">×10^x</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">π</span><span class="lbl-magenta">e</span></div><button class="btn-num" style="font-size: clamp(14px, 4vw, 18px);" data-val="×10^" data-shift="pi" data-alpha="e">×10^x</button></div>
       <div class="key-group"><div class="labels"><span class="lbl-yellow">DRG▶</span></div><button class="btn-num" style="font-size: clamp(14px, 4vw, 18px);" data-val="Ans">Ans</button></div>
       <div class="key-group"><div class="labels"></div><button class="btn-op" data-val="=">=</button></div>
     </div>
@@ -660,15 +660,64 @@
         break;
       case 'del':
         if (cursorPos > 0) {
-          expression = expression.slice(0, cursorPos - 1) + expression.slice(cursorPos);
-          cursorPos--;
+          // Array of functions/tokens to delete as a single block
+          const tokens = [
+            'sin(', 'cos(', 'tan(', 'asin(', 'acos(', 'atan(', 
+            'log(', 'ln(', '√(', '³√(', 'Ans', '×10^', 'abs(', '^-1', '^2'
+          ];
+          
+          let deletedToken = false;
+          let leftStr = expression.slice(0, cursorPos);
+          
+          for (let token of tokens) {
+            if (leftStr.endsWith(token)) {
+              expression = leftStr.slice(0, -token.length) + expression.slice(cursorPos);
+              cursorPos -= token.length;
+              deletedToken = true;
+              break;
+            }
+          }
+          
+          if (!deletedToken) {
+            // Delete a single character if no token matched
+            expression = expression.slice(0, cursorPos - 1) + expression.slice(cursorPos);
+            cursorPos--;
+          }
         }
         break;
       case 'left':
-        if (cursorPos > 0) cursorPos--;
+        if (cursorPos > 0) {
+           let foundToken = false;
+           const jumpTokens = [
+            'sin(', 'cos(', 'tan(', 'asin(', 'acos(', 'atan(', 
+            'log(', 'ln(', '√(', '³√(', 'Ans', '×10^', 'abs(', '^-1', '^2'
+           ];
+           for (let token of jumpTokens) {
+              if (expression.slice(0, cursorPos).endsWith(token)) {
+                 cursorPos -= token.length;
+                 foundToken = true;
+                 break;
+              }
+           }
+           if (!foundToken) cursorPos--;
+        }
         break;
       case 'right':
-        if (cursorPos < expression.length) cursorPos++;
+        if (cursorPos < expression.length) {
+           let foundToken = false;
+           const jumpTokens = [
+            'sin(', 'cos(', 'tan(', 'asin(', 'acos(', 'atan(', 
+            'log(', 'ln(', '√(', '³√(', 'Ans', '×10^', 'abs(', '^-1', '^2'
+           ];
+           for (let token of jumpTokens) {
+              if (expression.slice(cursorPos).startsWith(token)) {
+                 cursorPos += token.length;
+                 foundToken = true;
+                 break;
+              }
+           }
+           if (!foundToken) cursorPos++;
+        }
         break;
       case 'up':
         cursorPos = 0;
@@ -688,8 +737,9 @@
           'log': 'log(', 'ln': 'ln(', 
           'sqrt': '√(', 'cbrt': '³√(',
           'pow': '^', 'sqr': '^2', 'inv': '^-1',
-          'frac': '/', '10^': '10^(', 'e^': 'e^(',
-          'logab': 'log('
+          'deg': '°', 'hyp': 'sinh(', 'frac': '/', 'rcl': 'RCL ', 'eng': 'ENG ',
+          'fact': '!', 'abs': 'abs(', 'pi': 'π', '=': '=', ',': ',',
+          '10^': '10^(', 'e^': 'e^(', 'logab': 'log('
         };
         
         if (map[val]) insertStr = map[val];
