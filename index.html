@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Casio fx-991ES PLUS (2nd Edition)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Prevent Scrolling/Zooming */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: #0e0e0e;
+      font-family: 'Open Sans', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+    }
+
+    /* Calculator Main Body - Universal Full Screen */
+    .calc-body {
+      width: 100vw;
+      height: 100dvh;
+      max-width: 100%;
+      max-height: 100%;
+      background: #1a1a1b; /* Authentic dark charcoal */
+      border-radius: 0;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      padding: 2.5vh 3vw 3vh 3vw;
+      position: relative;
+    }
+
+    /* Branding & Solar Panel */
+    .branding {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5vh;
+      padding: 0 1vw;
+      color: #fff;
+    }
+    .brand-left {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-logo {
+      font-weight: 700;
+      font-size: clamp(18px, 5vw, 24px);
+      letter-spacing: 1.5px;
+      line-height: 1;
+    }
+    .model-name {
+      font-weight: 600;
+      font-style: italic;
+      font-size: clamp(11px, 2.5vw, 14px);
+      margin-top: 4px;
+      color: #e0e0e0;
+    }
+    .model-sub {
+      font-size: clamp(8px, 1.8vw, 10px);
+      color: #999;
+      font-style: italic;
+      letter-spacing: 0.5px;
+      margin-top: 1px;
+    }
+    
+    .brand-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+    .solar-panel {
+      width: clamp(70px, 18vw, 100px);
+      height: clamp(18px, 5vw, 26px);
+      background: linear-gradient(180deg, #382121, #241414);
+      border: 1px solid #111;
+      border-radius: 2px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.1);
+      display: flex;
+    }
+    /* Solar cell lines */
+    .solar-panel::before, .solar-panel::after {
+      content: '';
+      flex: 1;
+      border-right: 1px solid #1a0f0f;
+    }
+    .solar-panel::after { border-left: 1px solid #4a2d2d; border-right: none; }
+    
+    .edition-label {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #d4a32a;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Screen Module */
+    .screen-module {
+      background: #111;
+      padding: 1.5vh 3vw;
+      border-radius: 10px;
+      border: 1px solid #000;
+      box-shadow: inset 0 5px 15px rgba(0,0,0,0.9), 0 2px 3px rgba(255,255,255,0.08);
+      margin-bottom: 2vh;
+      flex: 0 0 15%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .screen {
+      flex: 1;
+      background: #b4c2b5; /* Authentic darker LCD Green/Gray */
+      border-radius: 3px;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.4);
+      padding: 0.5vh 2vw;
+      display: flex;
+      flex-direction: column;
+      font-family: 'VT323', monospace;
+      color: #111;
+      position: relative;
+    }
+
+    .indicators {
+      display: flex;
+      gap: 3vw;
+      font-size: clamp(10px, 2.5vw, 13px);
+      height: 1.5vh;
+      line-height: 1;
+      font-weight: 600;
+    }
+    .indicators span { opacity: 0; }
+    .indicators span.active { opacity: 1; }
+    .indicators .right-inds {
+      margin-left: auto;
+      display: flex;
+      gap: 2vw;
+    }
+
+    .screen-input {
+      flex: 1;
+      font-size: clamp(22px, 6.5vw, 34px);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      white-space: pre;
+      letter-spacing: 1px;
+    }
+    .screen-output {
+      height: 40%;
+      font-size: clamp(28px, 8vw, 42px);
+      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      font-weight: 500;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: clamp(6px, 1.5vw, 10px);
+      height: clamp(18px, 5vw, 24px);
+      background-color: #111;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Keypad Common */
+    .keypad {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2vh;
+    }
+
+    .key-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .labels {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2px;
+      font-size: clamp(7px, 2vw, 10px);
+      margin-bottom: 2px;
+      min-height: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .labels span { flex: 1; text-align: center; }
+    .labels span:first-child { text-align: left; }
+    .labels span:last-child { text-align: right; }
+    
+    /* Strict Color Palette from Image */
+    .lbl-yellow { color: #e5b642; } /* Vibrant Casio Yellow */
+    .lbl-magenta { color: #d6557d; } /* Casio Magenta */
+    .lbl-blue { color: #6299d6; } /* Casio Blue */
+
+    button {
+      outline: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Open Sans', sans-serif;
+      transition: transform 0.05s, filter 0.1s;
+      width: 100%;
+      flex: 1;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    button:active {
+      transform: scale(0.92) translateY(2px);
+      filter: brightness(0.8);
+    }
+
+    /* Top Controls Grid (Shift, Alpha, Replay, Mode, On) */
+    .top-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.8fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1vh 1.5vw;
+      flex: 0 0 16%;
+    }
+
+    .btn-circle {
+      background: linear-gradient(180deg, #b0b1b3, #8a8b8c);
+      color: #111;
+      box-shadow: 0 3px 0 #555, 0 4px 4px rgba(0,0,0,0.5);
+      font-size: clamp(7px, 2.2vw, 11px);
+      border-radius: 50%;
+      aspect-ratio: 1 / 1;
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .btn-sci {
+      background: #1b1b1c; /* Very dark grey, almost black */
+      color: #fff;
+      box-shadow: 0 3px 0 #050505, 0 4px 4px rgba(0,0,0,0.6);
+      font-size: clamp(9px, 2.5vw, 13px);
+      border-radius: 5px;
+    }
+
+    /* Cross-Shaped Replay Pad */
+    .replay-container {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .replay-lbl {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #999;
+      font-weight: 700;
+      position: absolute;
+      top: -10px;
+    }
+    .replay-cross {
+      width: 100%;
+      height: 90%;
+      position: relative;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.6));
+    }
+    .replay-arm-v {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 30%; right: 30%;
+      background: linear-gradient(180deg, #b0b1b3, #6a6b6c);
+      border-radius: 6px;
+    }
+    .replay-arm-h {
+      position: absolute;
+      left: 0; right: 0;
+      top: 30%; bottom: 30%;
+      background: linear-gradient(90deg, #b0b1b3, #6a6b6c);
+      border-radius: 6px;
+    }
+    .replay-center {
+      position: absolute;
+      top: 32%; left: 32%; right: 32%; bottom: 32%;
+      background: #222;
+      border-radius: 50%;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+      pointer-events: none;
+      z-index: 2;
+    }
+    
+    .replay-cross button {
+      position: absolute;
+      background: transparent;
+      box-shadow: none;
+      color: #222;
+      font-size: clamp(8px, 2.5vw, 12px);
+      border-radius: 0;
+      z-index: 3;
+      width: 40%; height: 40%;
+      display: flex; justify-content: center; align-items: center;
+    }
+    .replay-cross button:active { color: #fff; }
+    .replay-cross .up { top: 0; left: 30%; height: 35%; }
+    .replay-cross .down { bottom: 0; left: 30%; height: 35%; }
+    .replay-cross .left { top: 30%; left: 0; width: 35%; }
+    .replay-cross .right { top: 30%; right: 0; width: 35%; }
+
+    /* Scientific Keys Grid */
+    .sci-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1vh 1.5vw;
+      flex: 0 0 20%;
+    }
+
+    /* Numpad Grid */
+    .numpad-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 1.5vh 2vw;
+      flex: 1;
+      padding-top: 1vh;
+    }
+
+    .btn-num {
+      background: #5c5d5f; /* Medium grey for numbers */
+      color: #fff;
+      font-size: clamp(16px, 5vw, 22px);
+      box-shadow: 0 4px 0 #3a3a3c, 0 5px 5px rgba(0,0,0,0.5);
+      border-radius: 6px;
+      font-weight: 400;
+    }
+    .btn-op {
+      background: #2e2e30; /* Darker grey for operators */
+      color: #fff;
+      font-size: clamp(16px, 5vw, 22px);
+      box-shadow: 0 4px 0 #151515, 0 5px 5px rgba(0,0,0,0.5);
+      font-weight: 400;
+      border-radius: 6px;
+    }
+    .btn-del-ac {
+      background: #89bd3c; /* Casio Lime Green */
+      color: #fff;
+      font-size: clamp(14px, 4vw, 18px);
+      box-shadow: 0 4px 0 #5b8524, 0 5px 5px rgba(0,0,0,0.5);
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body ontouchstart="">
+
+<div class="calc-body">
+  
+  <div class="branding">
+    <div class="brand-left">
+      <div class="brand-logo">CASIO</div>
+      <div class="model-name">fx-991ES PLUS</div>
+      <div class="model-sub">NATURAL-V.P.A.M.</div>
+    </div>
+    <div class="brand-right">
+      <div class="solar-panel"></div>
+      <div class="edition-label">2nd edition</div>
+    </div>
+  </div>
+
+  <div class="screen-module">
+    <div class="screen">
+      <div class="indicators">
+        <span id="ind-shift">S</span>
+        <span id="ind-alpha">A</span>
+        <span id="ind-math" class="active">M</span>
+        <div class="right-inds">
+          <span id="ind-deg" class="active">D</span>
+          <span id="ind-rad">R</span>
+          <span class="active">Math ▲</span>
+        </div>
+      </div>
+      <div class="screen-input" id="screen-input"></div>
+      <div class="screen-output" id="screen-output"></div>
+    </div>
+  </div>
+
+  <div class="keypad">
+    
+    <!-- Top Controls: SHIFT, ALPHA, REPLAY, MODE, ON, CALC, INT, INV, LOGAB -->
+    <div class="top-controls">
+      <!-- Row 1 -->
+      <div class="key-group">
+        <div class="labels"><span class="lbl-yellow">SHIFT</span></div>
+        <button class="btn-circle" data-val="shift">SHIFT</button>
+      </div>
+      <div class="key-group">
+        <div class="labels"><span class="lbl-magenta">ALPHA</span></div>
+        <button class="btn-circle" data-val="alpha">ALPHA</button>
+      </div>
+      
+      <div class="replay-container">
+        <span class="replay-lbl">REPLAY</span>
+        <div class="replay-cross">
+          <div class="replay-arm-v"></div>
+          <div class="replay-arm-h"></div>
+          <div class="replay-center"></div>
+          <button class="up" data-val="up">▲</button>
+          <button class="down" data-val="down">▼</button>
+          <button class="left" data-val="left">◀</button>
+          <button class="right" data-val="right">▶</button>
+        </div>
+      </div>
+
+      <div class="key-group">
+        <div class="labels"><span></span><span class="lbl-yellow">SETUP</span></div>
+        <button class="btn-circle" data-val="mode">MODE</button>
+      </div>
+      <div class="key-group">
+        <div class="labels"></div>
+        <button class="btn-circle" data-val="on">ON</button>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="key-group">
+        <div class="labels"><span class="lbl-yellow">SOLVE</span><span class="lbl-magenta">=</span></div>
+        <button class="btn-sci" data-val="calc">CALC</button>
+      </div>
+      <div class="key-group">
+        <div class="labels"><span class="lbl-yellow">d/dx</span><span class="lbl-magenta">:</span></div>
+        <button class="btn-sci" data-val="int">∫dx</button>
+      </div>
+      
+      <!-- Skip grid col 3 for replay pad -->
+      
+      <div class="key-group" style="grid-column: 4;">
+        <div class="labels"><span class="lbl-yellow">x!</span></div>
+        <button class="btn-sci" data-val="inv">x⁻¹</button>
+      </div>
+      <div class="key-group">
+        <div class="labels"><span class="lbl-yellow">Σ</span></div>
+        <button class="btn-sci" data-val="logab">log_■□</button>
+      </div>
+    </div>
+
+    <!-- Scientific Keys Grid -->
+    <div class="sci-grid">
+      <!-- Row 1 -->
+      <div class="key-group"><div class="labels"><span class="lbl-yellow" style="font-size: 6px;">mixed</span></div><button class="btn-sci" data-val="frac">■/□</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">³√■</span></div><button class="btn-sci" data-val="sqrt" data-shift="cbrt">√■</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-blue">DEC</span></div><button class="btn-sci" data-val="sqr">x²</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-blue">HEX</span></div><button class="btn-sci" data-val="pow">x^■</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-blue">BIN</span></div><button class="btn-sci" data-val="log" data-shift="10^">log</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-blue">OCT</span></div><button class="btn-sci" data-val="ln" data-shift="e^">ln</button></div>
+      
+      <!-- Row 2 -->
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">∠</span><span class="lbl-magenta">A</span></div><button class="btn-sci" data-val="-" data-alpha="A">(-)</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">←</span><span class="lbl-magenta">B</span></div><button class="btn-sci" data-val="deg" data-alpha="B">°' "</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">Abs</span><span class="lbl-magenta">C</span></div><button class="btn-sci" data-val="hyp" data-alpha="C">hyp</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">sin⁻¹</span><span class="lbl-magenta">D</span></div><button class="btn-sci" data-val="sin" data-shift="asin" data-alpha="D">sin</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">cos⁻¹</span><span class="lbl-magenta">E</span></div><button class="btn-sci" data-val="cos" data-shift="acos" data-alpha="E">cos</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">tan⁻¹</span><span class="lbl-magenta">F</span></div><button class="btn-sci" data-val="tan" data-shift="atan" data-alpha="F">tan</button></div>
+      
+      <!-- Row 3 -->
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">STO</span></div><button class="btn-sci" data-val="rcl" data-alpha="X">RCL</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">←</span></div><button class="btn-sci" data-val="eng" data-alpha="Y">ENG</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">%</span></div><button class="btn-sci" data-val="(" data-shift="%">(</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">,</span><span class="lbl-magenta">X</span></div><button class="btn-sci" data-val=")">)</button></div>
+      <div class="key-group"><div class="labels"><span></span><span class="lbl-magenta">Y</span></div><button class="btn-sci" data-val="sd">S⇔D</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">M-</span><span class="lbl-magenta">M</span></div><button class="btn-sci" data-val="mplus">M+</button></div>
+    </div>
+
+    <!-- Numpad Grid -->
+    <div class="numpad-grid">
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">CONST</span></div><button class="btn-num" data-val="7">7</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">CONV</span></div><button class="btn-num" data-val="8">8</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">CLR</span></div><button class="btn-num" data-val="9">9</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">INS</span></div><button class="btn-del-ac" data-val="del">DEL</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">OFF</span></div><button class="btn-del-ac" data-val="ac">AC</button></div>
+      
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">MATRIX</span></div><button class="btn-num" data-val="4">4</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">VECTOR</span></div><button class="btn-num" data-val="5">5</button></div>
+      <div class="key-group"><div class="labels"></div><button class="btn-num" data-val="6">6</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">nPr</span></div><button class="btn-op" data-val="×">×</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">nCr</span></div><button class="btn-op" data-val="÷">÷</button></div>
+      
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">STAT</span></div><button class="btn-num" data-val="1">1</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">CMPLX</span></div><button class="btn-num" data-val="2">2</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-blue">BASE</span></div><button class="btn-num" data-val="3">3</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">Pol</span></div><button class="btn-op" data-val="+">+</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">Rec</span></div><button class="btn-op" data-val="-">-</button></div>
+      
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">Rnd</span></div><button class="btn-num" data-val="0">0</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">Ran#</span><span class="lbl-magenta">RanInt</span></div><button class="btn-num" data-val=".">.</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">π</span><span class="lbl-magenta">e</span></div><button class="btn-num" style="font-size: clamp(14px, 4vw, 18px);" data-val="×10^" data-shift="π" data-alpha="e">×10^x</button></div>
+      <div class="key-group"><div class="labels"><span class="lbl-yellow">DRG▶</span></div><button class="btn-num" style="font-size: clamp(14px, 4vw, 18px);" data-val="Ans">Ans</button></div>
+      <div class="key-group"><div class="labels"></div><button class="btn-op" data-val="=">=</button></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let expression = '';
+  let cursorPos = 0;
+  let shift = false;
+  let alpha = false;
+  let mode = 'DEG';
+  let ans = 0;
+  let result = '';
+
+  const inputLine = document.getElementById('screen-input');
+  const outputLine = document.getElementById('screen-output');
+  const indShift = document.getElementById('ind-shift');
+  const indAlpha = document.getElementById('ind-alpha');
+  const indDeg = document.getElementById('ind-deg');
+  const indRad = document.getElementById('ind-rad');
+
+  function updateDisplay() {
+    const left = expression.slice(0, cursorPos);
+    const right = expression.slice(cursorPos);
+    inputLine.innerHTML = left + '<span class="cursor"></span>' + right;
+    
+    indShift.classList.toggle('active', shift);
+    indAlpha.classList.toggle('active', alpha);
+    indDeg.classList.toggle('active', mode === 'DEG');
+    indRad.classList.toggle('active', mode === 'RAD');
+  }
+
+  function parseExpression(expr) {
+    let p = expr;
+    p = p.replace(/×/g, '*');
+    p = p.replace(/÷/g, '/');
+    p = p.replace(/π/g, 'pi');
+    p = p.replace(/³√\(/g, 'cbrt(');
+    p = p.replace(/√\(/g, 'sqrt(');
+    p = p.replace(/Ans/g, 'ans');
+    p = p.replace(/×10\^/g, '*10^');
+    p = p.replace(/log\(/g, 'log10(');
+    p = p.replace(/ln\(/g, 'log(');
+    return p;
+  }
+
+  function evaluateExpression() {
+    try {
+       let parsed = parseExpression(expression);
+       
+       let open = (parsed.match(/\(/g) || []).length;
+       let close = (parsed.match(/\)/g) || []).length;
+       while (open > close) {
+         parsed += ')';
+         close++;
+       }
+
+       if (parsed.trim() === '') return;
+       
+       const scope = {
+         ans: ans,
+         A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, X: 0, Y: 0, M: 0,
+         sin: (x) => mode === 'DEG' ? math.sin(math.unit(x, 'deg')) : math.sin(x),
+         cos: (x) => mode === 'DEG' ? math.cos(math.unit(x, 'deg')) : math.cos(x),
+         tan: (x) => mode === 'DEG' ? math.tan(math.unit(x, 'deg')) : math.tan(x),
+         asin: (x) => mode === 'DEG' ? math.asin(x).toNumber('deg') : math.asin(x),
+         acos: (x) => mode === 'DEG' ? math.acos(x).toNumber('deg') : math.acos(x),
+         atan: (x) => mode === 'DEG' ? math.atan(x).toNumber('deg') : math.atan(x),
+       };
+
+       let res = math.evaluate(parsed, scope);
+       
+       // High accuracy formatting to avoid JS floating point quirks (e.g. 0.1+0.2)
+       res = math.format(res, { precision: 13, lowerExp: -12, upperExp: 12 });
+       
+       result = res.toString();
+       
+       if (result === 'NaN' || result === 'Infinity' || result === '-Infinity') {
+           outputLine.innerText = "Math ERROR";
+           result = "Math ERROR";
+       } else {
+           ans = res;
+           outputLine.innerText = result;
+       }
+       
+       shift = false;
+       alpha = false;
+       updateDisplay();
+    } catch (err) {
+       result = "Syntax ERROR";
+       outputLine.innerText = result;
+    }
+  }
+
+  function handleInput(val) {
+    // If there is a result or error displayed, clear or continue depending on input
+    if (result !== '' && !['up', 'down', 'left', 'right', 'shift', 'alpha', 'mode', 'on'].includes(val)) {
+      if (result !== "Syntax ERROR" && result !== "Math ERROR" && ['+', '-', '×', '÷', '^', '^2', '^-1'].includes(val)) {
+         expression = 'Ans';
+         cursorPos = 3;
+      } else {
+         expression = '';
+         cursorPos = 0;
+      }
+      result = '';
+      outputLine.innerText = '';
+    }
+
+    switch(val) {
+      case 'shift':
+        shift = !shift;
+        alpha = false;
+        break;
+      case 'alpha':
+        alpha = !alpha;
+        shift = false;
+        break;
+      case 'mode':
+        mode = mode === 'DEG' ? 'RAD' : 'DEG';
+        break;
+      case 'ac':
+      case 'on':
+        expression = '';
+        cursorPos = 0;
+        result = '';
+        outputLine.innerText = '';
+        shift = false;
+        alpha = false;
+        break;
+      case 'del':
+        if (cursorPos > 0) {
+          expression = expression.slice(0, cursorPos - 1) + expression.slice(cursorPos);
+          cursorPos--;
+        }
+        break;
+      case 'left':
+        if (cursorPos > 0) cursorPos--;
+        break;
+      case 'right':
+        if (cursorPos < expression.length) cursorPos++;
+        break;
+      case 'up':
+        cursorPos = 0;
+        break;
+      case 'down':
+        cursorPos = expression.length;
+        break;
+      case '=':
+        evaluateExpression();
+        return; 
+      default:
+        let insertStr = val;
+        
+        const map = {
+          'sin': 'sin(', 'cos': 'cos(', 'tan': 'tan(',
+          'asin': 'asin(', 'acos': 'acos(', 'atan': 'atan(',
+          'log': 'log(', 'ln': 'ln(', 
+          'sqrt': '√(', 'cbrt': '³√(',
+          'pow': '^', 'sqr': '^2', 'inv': '^-1',
+          'frac': '/', '10^': '10^(', 'e^': 'e^(',
+          'logab': 'log('
+        };
+        
+        if (map[val]) insertStr = map[val];
+        
+        expression = expression.slice(0, cursorPos) + insertStr + expression.slice(cursorPos);
+        cursorPos += insertStr.length;
+        
+        shift = false;
+        alpha = false;
+        break;
+    }
+    updateDisplay();
+  }
+
+  document.querySelectorAll('button').forEach(btn => {
+    // pointerdown provides instant touch feedback with zero delay
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault(); // Prevents double firing or selection issues
+      if (navigator.vibrate) navigator.vibrate(10); // Haptic feedback for tactile feel
+      let val = btn.dataset.val;
+      
+      if (shift && btn.dataset.shift) val = btn.dataset.shift;
+      else if (alpha && btn.dataset.alpha) val = btn.dataset.alpha;
+      
+      if (val) handleInput(val);
+    });
+  });
+
+  updateDisplay();
+</script>
+</body>
+</html>
